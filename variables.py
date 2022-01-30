@@ -12,10 +12,16 @@ Player1 = 'PLAYER1'
 Player2 = 'PLAYER2'
 FORWARD_DST = 15
 
+# Initialize the score
+left_player = 0
+right_player = 0
+
 
 def init_pen():
     pen = turtle.Turtle()
     pen.hideturtle()
+    pen.speed(0)
+    pen.color("white")
 
     return pen
 
@@ -23,9 +29,10 @@ def init_scr():
     wn = turtle.Screen()
     wn.title("Pong by nazrin")
     wn.bgcolor('black')
-    wn.setup(width=1.0, height=1.0)
+    wn.setup(width=1000, height=600)
     wn.tracer(0)
 
+    
     return wn
 
 def init_player1():
