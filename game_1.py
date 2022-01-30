@@ -1,159 +1,85 @@
-from functools import partial
-import pygame
 from variables import *
 
-import winsound
-import turtle
-import random 
 import time 
-# import soundfile as sf
-# import sounddevice as sd
 
 
 def game():
 
-    
+    pen = init_pen()
+    wn = init_scr()
+    player_1 = init_player1()
+    player_2 = init_player2()
+    ex_1 = init_ex1()
+    ex_2 = init_ex1()
+    ball = init_ball()
 
-
-    # wn 
-    wn = turtle.Screen()
-    wn.title("Pong by nazrin")
-    wn.bgcolor('black')
     pen.penup()
     pen.home()
     pen.sety(-13)
     pen.color('white')
-    pen.write('Ping Pong Game', align='center', font=('Arial', 26, 'bold'))
-    time.sleep(2)
     pen.clear()
-    wn.setup(width=800, height=600)
-    wn.tracer(0)
-
-    # Player_1 
-    player_1 = turtle.Turtle()
-    player_1.speed(PLAYER_SPEED)
-    player_1.shape("square")
-    player_1.color("blue")
-    player_1.shapesize(stretch_wid=5, stretch_len=1)
-    player_1.penup()
-    player_1.goto(-350,0)
-
-    # Player_2 
-    player_2 = turtle.Turtle()
-    player_2.speed(PLAYER_SPEED) 
-    player_2.shape("square")
-    player_2.color("orange")
-    player_2.shapesize(stretch_wid=5, stretch_len=1)
-    player_2.penup()
-    player_2.goto(350, 0)
-    
-    # Extra_player_1
-    ex_1 = turtle.Turtle()
-    ex_1.speed(PLAYER_SPEED)
-    ex_1.shape('square')
-    ex_1.color('blue')
-    ex_1.shapesize(stretch_wid=5, stretch_len=1)
-    ex_1.penup()
-    ex_1.goto(-350, -600)
-
-    #Extra_player_2:
-    ex_2 = turtle.Turtle()
-    ex_2.speed(PLAYER_SPEED)
-    ex_2.shape('square')
-    ex_2.color('orange')
-    ex_2.shapesize(stretch_wid=5, stretch_len=1)
-    ex_2.penup()
-    ex_2.goto(350, -600)
-
-    # Ball 
-    ball = turtle.Turtle()
-    ball.speed(0)
-    ball.shape("circle")
-    ball.color('white')
-    ballheading = random.randint(1,360)
-    ball.penup()
-    ball.setheading(ballheading)
-    ball.dx = 0.5
-    ball.dy = -0.5
 
     # Pen
-    pen = turtle.Turtle()
     pen.speed(0)
     pen.color("white")
     pen.penup()
     pen.hideturtle()
     pen.goto(0, 260)
-    pen.write("{} : 0 {} : 0".format(Player1.get(), Player2.get()), align="center", font=FONT)
+    pen.write(("Player1 : 0 Player2 : 0"), align="center", font=FONT)
 
-    # movement  
-    #PLAYER_1
-    def player_1_up():
-        y = player_1.ycor()
-        y += PLAYER_SPEED
-        player_1.sety(y)
+    # player movement functions
+    def go_up(player, ex):
+        if player.direction != "down":
+            player.direction = "up"
+            ex_1.direction = "up"
 
-    def player_1_down():
-        y = player_1.ycor()
-        y -= PLAYER_SPEED
-        player_1.sety(y)
+    def go_down(player, ex):
+        if player.direction != "up":
+            player.direction = "down"
+            ex_1.direction = "up"
 
-    #PLAYER_2
-    def player_2_up():
-        y = player_2.ycor()
-        y += PLAYER_SPEED
-        player_2.sety(y)
+    def turn_w(player, ex):
+        if player.direction != "s":
+            player.direction = "w"
+            ex_2.direction = "up"
 
-    def player_2_down():
-        y = player_2.ycor()
-        y -= PLAYER_SPEED
-        player_2.sety(y)
-    
-    #PLAYER_EXTRA_1
-    def ex_1_up():
-        y = ex_1.ycor()
-        y += PLAYER_SPEED
-        ex_1.sety(y)
+    def turn_s(player, ex):
+        if player.direction != "w":
+            player.direction = "s"
+            ex_2.direction = "up"
 
-    def ex_1_down():
-        y = ex_1.ycor()
-        y -= PLAYER_SPEED
-        ex_1.sety(y)
-
-    #PLAYER_EXTRA_2    
-    def ex_2_up():
-        y = ex_2.ycor()
-        y += PLAYER_SPEED
-        ex_2.sety(y)
-
-    def ex_2_down():
-        y = ex_2.ycor()
-        y -= PLAYER_SPEED
-        ex_2.sety(y)
-
-    #BOTH
-    def both_1():
-        player_1_up()
-        ex_1_up()
-        
-    def both_2():
-        player_2_up()
-        ex_2_up()
-
-    def both_3():
-        player_1_down()
-        ex_1_down()
-
-    def both_4():
-        player_2_down()
-        ex_2_down()
-    
-    # Keyboards
+    # respond to user input
     wn.listen()
-    wn.onkeypress(both_1, "w")
-    wn.onkeypress(both_3, "s")
-    wn.onkeypress(both_2, "Up")
-    wn.onkeypress(both_4, "Down")
+    wn.onkeypress(go_up(player_1, ex_1), "Up")
+    wn.onkeypress(go_down(player_1, ex_1), "Down")
+    wn.onkeypress(turn_w(player_2, ex_2), "w")
+    wn.onkeypress(turn_s(player_2, ex_2), "s")
 
+    # #BOTH
+    # def both_1():
+    #     player_1_up()
+    #     ex_1_up()
+        
+    # def both_2():
+    #     player_2_up()
+    #     ex_2_up()
+
+    # def both_3():
+    #     player_1_down()
+    #     ex_1_down()
+
+    # def both_4():
+    #     player_2_down()
+    #     ex_2_down()
+    
+    # # Keyboards
+    # wn.listen()
+    # wn.onkeypress(both_1, "w")
+    # wn.onkeypress(both_3, "s")
+    # wn.onkeypress(both_2, "Up")
+    # wn.onkeypress(both_4, "Down")
+    PLAYER_1_SCORE = 0
+    PLAYER_2_SCORE = 0
     # Main game loop 
     while max(PLAYER_2_SCORE, PLAYER_1_SCORE) <= 9:
         wn.update()
@@ -177,14 +103,14 @@ def game():
             ball.dx *= -1
             PLAYER_1_SCORE += 1
             pen.clear()
-            pen.write("{} : {} {} : {}".format(Player1.get(), PLAYER_1_SCORE, Player2.get(), PLAYER_2_SCORE), align="center", font=FONT)
+            pen.write("Player1 : {} Player2 : {}".format(PLAYER_1_SCORE, PLAYER_2_SCORE), align="center", font=FONT)
             
         if ball.xcor() < -MAX_WEIGHT:
             ball.goto(0, 0)
             ball.dx *= -1
             PLAYER_2_SCORE += 1
             pen.clear()
-            pen.write("{} : {} {} : {}".format(Player1.get(), PLAYER_1_SCORE, Player2.get(), PLAYER_2_SCORE), align="center", font=FONT)
+            pen.write("Player1 : {} Player2 : {}".format(PLAYER_1_SCORE, PLAYER_2_SCORE), align="center", font=FONT)
 
 
         # Paddle and ball colluctions
@@ -216,7 +142,7 @@ def game():
             i += 1
             for i in range(1):
                 pen.color('white')
-                pen.write("Winner is {} with {} scores!!!".format(Player1.get(), PLAYER_1_SCORE), align="center", font=FONT)
+                pen.write("Winner is Player1 with {} scores!!!".format(PLAYER_1_SCORE), align="center", font=FONT)
                 time.sleep(3)
 
         if PLAYER_2_SCORE >= WINNER_SCORE:
