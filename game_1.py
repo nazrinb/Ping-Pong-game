@@ -1,34 +1,46 @@
+from multiprocessing.connection import wait
+from turtle import delay
 import pygame
+import random
 
 black = (0,0,0)
 white = (255,255,255)
+green = (109,115,63)
+red = (	140,20,42)
+blue = (70,69,115)
 
 pygame.init()
 
-size = 700,500
+X = 700
+Y = 700
+
+size = X, Y
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("2 player pong")
+
+light_grey = (200,200,200)
+bg_color = pygame.Color('grey12')
 
 done = False
 clock = pygame.time.Clock()
 
 def player1(x1, y1, xsize, ysize):
-    pygame.draw.rect(screen, black, [x1, y1, xsize, ysize])
+    pygame.draw.rect(screen, green, [x1, y1, xsize, ysize])
 
 def player2(x2, y2, xsize, ysize):
-    pygame.draw.rect(screen, black, [x2,y2,xsize,ysize])
+    pygame.draw.rect(screen, blue, [x2,y2,xsize,ysize])
 
 def ball(ballx, bally):
-    pygame.draw.circle(screen, black, [ballx,bally],20)
+    pygame.draw.circle(screen, red, [ballx,bally],20)
 
 def Score1(score1):
     font = pygame.font.Font(None ,50)
-    text = font.render(str(score1), True, black)
+    text = font.render(str(score1), True, white)
     screen.blit(text, [160, 0])
 
 def Score2(score2):
     font = pygame.font.Font(None ,50)
-    text = font.render(str(score2), True, black)
+    text = font.render(str(score2), True, white)
     screen.blit(text, [510, 0])
 
 x1 = 5
@@ -45,9 +57,34 @@ ballx = 350
 bally = 250
 speedx = 5
 speedy = 5
+ball_speed_x = 7 * random.choice((1,-1))
+ball_speed_y = 7 * random.choice((1,-1))
 
 score1 = 0
 score2 = 0
+maxscore = 6
+
+def ball_start():
+	global ball_speed_x, ball_speed_y
+
+	ball.center = (X/2, Y/2)
+	ball_speed_y *= random.choice((7,-7))
+	ball_speed_x *= random.choice((7,-7))
+
+# def ball_animation():
+# 	global ball_speed_x, ball_speed_y
+	
+# 	ball.x += ball_speed_x
+# 	ball.y += ball_speed_y
+
+# 	if ball.top <= 0 or ball.bottom >= Y:
+# 		ball_speed_y *= -1
+# 	if ball.left <= 0 or ball.right >= X:
+# 		ball_start()
+
+# 	if ball.colliderect(player1) or ball.colliderect(player2):
+# 		ball_speed_x *= -1
+
 
 while not done:
     for event in pygame.event.get():
@@ -74,8 +111,10 @@ while not done:
             if event.key ==  pygame.K_DOWN:
                 speed2 = 0
                 
+    
+    screen.fill(bg_color)
+    pygame.draw.aaline(screen, light_grey, (X / 2, 0),(X / 2, Y))
 
-    screen.fill(white)
     player1(x1, y1, xsize, ysize)
     player2(x2, y2, xsize, ysize)
     ball(ballx,bally)
@@ -117,8 +156,11 @@ while not done:
         score1 += 1
         ballx = 350
         bally = 250
-        
-
+    
+    if (score1 == maxscore) or (score2 == maxscore):
+        pygame.time.delay(3000)
+        ball_start()
+    
     pygame.display.flip()
 
     clock.tick(60)
