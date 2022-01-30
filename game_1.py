@@ -1,140 +1,126 @@
-from variables import *
+import pygame
 
-import time 
+black = (0,0,0)
+white = (255,255,255)
 
+pygame.init()
 
-def main():
+size = 700,500
+screen = pygame.display.set_mode(size)
+pygame.display.set_caption("2 player pong")
 
-    pen = init_pen()
-    wn = init_scr()
-    player_1 = init_player1()
-    player_2 = init_player2()
-    ex_1 = init_ex1()
-    ex_2 = init_ex1()
-    ball = init_ball()
+done = False
+clock = pygame.time.Clock()
 
-    pen.penup()
-    pen.home()
-    pen.sety(-13)
-    pen.color('white')
-    pen.clear()
+def player1(x1, y1, xsize, ysize):
+    pygame.draw.rect(screen, black, [x1, y1, xsize, ysize])
 
-    # Pen
-    pen.penup()
-    pen.hideturtle()
-    pen.goto(0, 260)
-    pen.write(("Player1 : 0 Player2 : 0"), align="center", font=FONT)
+def player2(x2, y2, xsize, ysize):
+    pygame.draw.rect(screen, black, [x2,y2,xsize,ysize])
 
-    # Functions to move paddle vertically
-    def paddleaup():
-        y = player_1.ycor()
-        y += 20
-        player_1.sety(y)
-    
-    
-    def paddleadown():
-        y = player_1.ycor()
-        y -= 20
-        player_1.sety(y)
-    
-    
-    def paddlebup():
-        y = player_2.ycor()
-        y += 20
-        player_2.sety(y)
-    
-    
-    def paddlebdown():
-        y = player_2.ycor()
-        y -= 20
-        player_2.sety(y)
-    
-    
-    # Keyboard bindings
-    wn.listen()
-    wn.onkeypress(paddleaup, "w")
-    wn.onkeypress(paddleadown, "s")
-    wn.onkeypress(paddlebup, "Up")
-    wn.onkeypress(paddlebdown, "Down")
+def ball(ballx, bally):
+    pygame.draw.circle(screen, black, [ballx,bally],20)
 
-    PLAYER_1_SCORE = 0
-    PLAYER_2_SCORE = 0
+def Score1(score1):
+    font = pygame.font.Font(None ,50)
+    text = font.render(str(score1), True, black)
+    screen.blit(text, [160, 0])
 
+def Score2(score2):
+    font = pygame.font.Font(None ,50)
+    text = font.render(str(score2), True, black)
+    screen.blit(text, [510, 0])
 
-    # Main game loop 
-    while max(PLAYER_2_SCORE, PLAYER_1_SCORE) <= 9:
-        wn.update()
-        
-        # Move the ball 
-        ball.setx(ball.xcor() + ball.dx)
-        ball.sety(ball.ycor() + ball.dy)
-        
-        # Border checking 
-        if ball.ycor() > MAX_HEIGHT:
-            ball.sety(MAX_HEIGHT)
-            ball.dy *= -1 
-            
-        if ball.ycor() < -MAX_HEIGHT:
-            ball.sety(-MAX_HEIGHT)
-            ball.dy *= -1 
-        
-        if ball.xcor() > MAX_WEIGHT:
-            ball.goto(0, 0)
+x1 = 5
+y1 = 175
+xsize = 35
+ysize = 150
+speed1 = 0
 
-            ball.dx *= -1
-            PLAYER_1_SCORE += 1
-            pen.clear()
-            pen.write("Player1 : {} Player2 : {}".format(PLAYER_1_SCORE, PLAYER_2_SCORE), align="center", font=FONT)
-            
-        if ball.xcor() < -MAX_WEIGHT:
-            ball.goto(0, 0)
-            ball.dx *= -1
-            PLAYER_2_SCORE += 1
-            pen.clear()
-            pen.write("Player1 : {} Player2 : {}".format(PLAYER_1_SCORE, PLAYER_2_SCORE), align="center", font=FONT)
+x2 = 660
+y2 = 175
+speed2 = 0
 
+ballx = 350
+bally = 250
+speedx = 5
+speedy = 5
 
-        # Paddle and ball colluctions
-        #PLAYER_1_2_BALL
-        if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < player_2.ycor() +40 and ball.ycor() > player_2.ycor() -40):
-            ball.setx(340)
-            ball.dx *= -1 
-        
-        if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < player_1.ycor() + 40 and ball.ycor() > player_1.ycor() - 40):
-            ball.setx(-340)
-            ball.dx *= -1 
-        
-        #PLAYER_EXTRA_1_2_BALL
-        if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < ex_2.ycor() + 40 and ball.ycor() > ex_2.ycor() - 40):
-            ball.setx(340)
-            ball.dx *= -1
-        
-        if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < ex_1.ycor() + 40 and ball.ycor() > ex_1.ycor() - 40):
-            ball.setx(-340)
-            ball.dx *= -1
+score1 = 0
+score2 = 0
 
+while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
 
-        # Winners
-        if PLAYER_1_SCORE >= WINNER_SCORE:
-            pen.penup()
-            pen.home()
-            pen.sety(-13)
-            i = 0 
-            i += 1
-            for i in range(1):
-                pen.color('white')
-                pen.write("Winner is Player1".format(PLAYER_1_SCORE), align="center", font=FONT)
-                time.sleep(3)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                speed1 = -10
+            if event.key == pygame.K_s:
+                speed1 = 10
+            if event.key == pygame.K_UP:
+                speed2 = -10
+            if event.key == pygame.K_DOWN:
+                speed2 = 10
 
-        if PLAYER_2_SCORE >= WINNER_SCORE:
-            pen.penup
-            pen.home()
-            pen.sety(-13)
-            for i in range(1):
-                pen.color('white')
-                pen.write("Winner is Player2".format(PLAYER_2_SCORE), align="center", font=FONT)
-                time.sleep(3)
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_w:
+                speed1 = 0
+            if event.key == pygame.K_s:
+                speed1 = 0
+            if event.key == pygame.K_UP:
+                speed2 = 0
+            if event.key ==  pygame.K_DOWN:
+                speed2 = 0
                 
 
-if __name__ == '__main__':
-    main()
+    screen.fill(white)
+    player1(x1, y1, xsize, ysize)
+    player2(x2, y2, xsize, ysize)
+    ball(ballx,bally)
+    Score1(score1)
+    Score2(score2)
+
+    y1 += speed1
+    y2 += speed2
+    ballx += speedx
+    bally += speedy
+
+    if y1 < 0:
+        y1 = 0
+
+    if y1 > 350:
+        y1 = 350
+
+    if y2 < 0:
+        y2 = 0
+
+    if y2 > 350:
+        y2 = 350
+
+    if ballx+20 > x2 and bally-20 > y2 and bally+20 < y2+ysize and ballx < x2+3:
+        speedx = -speedx
+
+    if ballx-20 < x1+35 and bally-20 > y1 and bally+20 < y1+ysize and ballx > x1+38:
+        speedx = -speedx
+
+    if bally > 477 or bally < 23:
+        speedy = -speedy
+
+    if ballx < 13:
+        score2 += 1
+        ballx = 350
+        bally = 250
+
+    if ballx > 680:
+        score1 += 1
+        ballx = 350
+        bally = 250
+        
+
+    pygame.display.flip()
+
+    clock.tick(60)
+
+pygame.quit()

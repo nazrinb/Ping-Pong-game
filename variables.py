@@ -11,6 +11,8 @@ PLAYER_SPEED = 50
 Player1 = 'PLAYER1'
 Player2 = 'PLAYER2'
 FORWARD_DST = 15
+posx = random.randint(-360, 360)
+posy = random.randint(-360, 360)
 
 # Initialize the score
 left_player = 0
@@ -36,28 +38,28 @@ def init_scr():
     return wn
 
 def init_player1():
-    player_1 = turtle.Turtle()
-    player_1.speed(PLAYER_SPEED)
-    player_1.shape("square")
-    player_1.color("blue")
-    player_1.shapesize(stretch_wid=5, stretch_len=1)
-    player_1.penup()
-    player_1.goto(-350,0)
-    player_1.direction = "Stop"
+    lpaddle = turtle.Turtle()
+    lpaddle.speed(PLAYER_SPEED)
+    lpaddle.shape("square")
+    lpaddle.color("blue")
+    lpaddle.shapesize(stretch_wid=5, stretch_len=1)
+    lpaddle.penup()
+    lpaddle.goto(-350,0)
+    lpaddle.direction = "Stop"
 
-    return player_1
+    return lpaddle
 
 def init_player2():
-    player_2 = turtle.Turtle()
-    player_2.speed(PLAYER_SPEED) 
-    player_2.shape("square")
-    player_2.color("orange")
-    player_2.shapesize(stretch_wid=5, stretch_len=1)
-    player_2.penup()
-    player_2.goto(350, 0)
-    player_2.direction = "Stop"
+    rpaddle = turtle.Turtle()
+    rpaddle.speed(PLAYER_SPEED) 
+    rpaddle.shape("square")
+    rpaddle.color("orange")
+    rpaddle.shapesize(stretch_wid=5, stretch_len=1)
+    rpaddle.penup()
+    rpaddle.goto(350, 0)
+    rpaddle.direction = "Stop"
 
-    return player_2
+    return rpaddle
 
 def init_ex1():
     ex_1 = turtle.Turtle()
