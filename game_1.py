@@ -1,7 +1,6 @@
 from functools import partial
-from turtle import Turtle, Screen
-from tkinter import *
-
+import pygame
+from variables import *
 
 import winsound
 import turtle
@@ -12,45 +11,9 @@ import time
 
 
 def game():
-    def validate_login(username_1, username_2):
-        print('username_1 entered: ', username_1.get())
-        print('username_2 entered: ', username_2.get())
-        return None
 
-    tkWindow = Tk()
-    tkWindow.geometry('400x400')
-    tkWindow.title('Tkinter Login Form - pythonexamples.org')
-
-    #First username:
-    username_label_1 = Label(tkWindow, text='First User Name').grid(row=0, column=0)
-    username_1 = StringVar()
-    username_entry_1 = Entry(tkWindow, textvariable=username_1).grid(row=0, column=1)
-
-    #Second username:
-    username_label_2 = Label(tkWindow, text='Second User Name').grid(row=1, column=0)
-    username_2 = StringVar()
-    username_entry_2 = Entry(tkWindow, textvariable=username_2).grid(row=1, column=1)
-
-    validate_login = partial(validate_login, username_1, username_2)
-
-    login_button = Button(tkWindow, text='Start Game:-)', command=validate_login).grid(row=4, column=0)
     
-    tkWindow.mainloop()
 
-
-
-    #Enclosure
-    FONT = ("Courier", 24, "normal")
-    MAX_HEIGHT = 290
-    MAX_WEIGHT = 390
-    WINNER_SCORE = 10
-    PLAYER_1_SCORE = 0
-    PLAYER_2_SCORE = 0
-    PLAYER_SPEED = 50
-    
-    #Pen
-    pen = turtle.Turtle()
-    pen.hideturtle()
 
     # wn 
     wn = turtle.Screen()
@@ -120,7 +83,7 @@ def game():
     pen.penup()
     pen.hideturtle()
     pen.goto(0, 260)
-    pen.write("{} : 0 {} : 0".format(username_1.get(), username_2.get()), align="center", font=FONT)
+    pen.write("{} : 0 {} : 0".format(Player1.get(), Player2.get()), align="center", font=FONT)
 
     # movement  
     #PLAYER_1
@@ -214,14 +177,14 @@ def game():
             ball.dx *= -1
             PLAYER_1_SCORE += 1
             pen.clear()
-            pen.write("{} : {} {} : {}".format(username_1.get(), PLAYER_1_SCORE, username_2.get(), PLAYER_2_SCORE), align="center", font=FONT)
+            pen.write("{} : {} {} : {}".format(Player1.get(), PLAYER_1_SCORE, Player2.get(), PLAYER_2_SCORE), align="center", font=FONT)
             
         if ball.xcor() < -MAX_WEIGHT:
             ball.goto(0, 0)
             ball.dx *= -1
             PLAYER_2_SCORE += 1
             pen.clear()
-            pen.write("{} : {} {} : {}".format(username_1.get(), PLAYER_1_SCORE, username_2.get(), PLAYER_2_SCORE), align="center", font=FONT)
+            pen.write("{} : {} {} : {}".format(Player1.get(), PLAYER_1_SCORE, Player2.get(), PLAYER_2_SCORE), align="center", font=FONT)
 
 
         # Paddle and ball colluctions
@@ -253,7 +216,7 @@ def game():
             i += 1
             for i in range(1):
                 pen.color('white')
-                pen.write("Winner is {} with {} scores!!!".format(username_1.get(), PLAYER_1_SCORE), align="center", font=FONT)
+                pen.write("Winner is {} with {} scores!!!".format(Player1.get(), PLAYER_1_SCORE), align="center", font=FONT)
                 time.sleep(3)
 
         if PLAYER_2_SCORE >= WINNER_SCORE:
@@ -262,7 +225,7 @@ def game():
             pen.sety(-13)
             for i in range(1):
                 pen.color('white')
-                pen.write("Winner is {} with {} scores!!!".format(username_2.get(), PLAYER_2_SCORE), align="center", font=FONT)
+                pen.write("Winner is {} with {} scores!!!".format(Player2.get(), PLAYER_2_SCORE), align="center", font=FONT)
                 time.sleep(3)
                 
 
